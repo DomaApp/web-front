@@ -1,9 +1,20 @@
+import { useState } from 'react'
+
+const ANIMATION_DURATION = 350
+
 export default function CookieConsent({ onAccept, onDecline }) {
+  const [leaving, setLeaving] = useState(false)
+
+  function dismiss(callback) {
+    setLeaving(true)
+    setTimeout(callback, ANIMATION_DURATION)
+  }
+
   return (
     <div
       role="dialog"
       aria-label="Consentement aux cookies"
-      className="cookie-consent"
+      className={leaving ? 'cookie-consent-out' : 'cookie-consent'}
       style={{
         position: 'fixed',
         bottom: '1.5rem',
@@ -58,7 +69,7 @@ export default function CookieConsent({ onAccept, onDecline }) {
       {/* Actions */}
       <div style={{ display: 'flex', gap: '0.625rem' }}>
         <button
-          onClick={onDecline}
+          onClick={() => dismiss(onDecline)}
           style={{
             padding: '0.5rem 1.1rem',
             borderRadius: '0.625rem',
@@ -82,7 +93,7 @@ export default function CookieConsent({ onAccept, onDecline }) {
           Refuser
         </button>
         <button
-          onClick={onAccept}
+          onClick={() => dismiss(onAccept)}
           style={{
             padding: '0.5rem 1.1rem',
             borderRadius: '0.625rem',
