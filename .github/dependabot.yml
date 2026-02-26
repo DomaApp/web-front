@@ -7,3 +7,11 @@ updates:
       day: "monday"
       time: "08:00"
       timezone: "Europe/Paris"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+      timezone: "Europe/Paris"

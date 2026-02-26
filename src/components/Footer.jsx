@@ -1,4 +1,3 @@
-import StoreButton from './StoreButton.jsx'
 import appleBadge from '../assets/app-store-badge.svg'
 import googleBadge from '../assets/google-play-badge.svg'
 
