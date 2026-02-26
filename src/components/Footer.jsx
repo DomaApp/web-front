@@ -107,7 +107,7 @@ export default function Footer() {
               onMouseEnter={e => e.currentTarget.style.opacity = '1'}
               onMouseLeave={e => e.currentTarget.style.opacity = '0.6'}
             >
-              <img src={appleBadge} alt="Download on the App Store" height="28" style={{ display: 'block' }} />
+              <img src={appleBadge} alt="Download on the App Store" style={{ display: 'block', height: 28, width: 'auto' }} />
             </a>
             <a
               href="#play-store"
@@ -115,7 +115,7 @@ export default function Footer() {
               onMouseEnter={e => e.currentTarget.style.opacity = '1'}
               onMouseLeave={e => e.currentTarget.style.opacity = '0.6'}
             >
-              <img src={googleBadge} alt="Get it on Google Play" height="28" style={{ display: 'block' }} />
+              <img src={googleBadge} alt="Get it on Google Play" style={{ display: 'block', height: 28, width: 'auto' }} />
             </a>
           </div>
         </div>

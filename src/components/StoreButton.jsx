@@ -25,8 +25,7 @@ export default function StoreButton({ store = 'apple', href = '#' }) {
       <img
         src={isApple ? appleBadge : googleBadge}
         alt={isApple ? 'Download on the App Store' : 'Get it on Google Play'}
-        height={40}
-        style={{ display: 'block' }}
+        style={{ display: 'block', height: 40, width: 'auto' }}
       />
     </a>
   )
