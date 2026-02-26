@@ -17,8 +17,10 @@ i18n
     nonExplicitSupportedLngs: true,
     fallbackLng: 'en',
     detection: {
-      order: ['localStorage', 'navigator', 'htmlTag'],
-      caches: ['localStorage'],
+      order: ['cookie', 'navigator', 'htmlTag'],
+      caches: [],
+      lookupCookie: 'i18next',
+      cookieOptions: { path: '/', sameSite: 'strict' }
     },
     interpolation: {
       escapeValue: false
