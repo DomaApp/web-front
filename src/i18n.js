@@ -14,9 +14,10 @@ i18n
       fr: { translation: fr }
     },
     supportedLngs: ['en', 'fr'],
+    nonExplicitSupportedLngs: true,
     fallbackLng: 'en',
     detection: {
-      order: ['cookie', 'localStorage', 'navigator', 'htmlTag'],
+      order: ['cookie', 'navigator', 'htmlTag'],
       caches: ['cookie'],
       lookupCookie: 'i18next',
       cookieMinutes: 1440 * 365, // 1 year
