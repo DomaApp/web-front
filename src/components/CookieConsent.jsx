@@ -3,13 +3,12 @@ export default function CookieConsent({ onAccept, onDecline }) {
     <div
       role="dialog"
       aria-label="Consentement aux cookies"
+      className="cookie-consent"
       style={{
         position: 'fixed',
         bottom: '1.5rem',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        width: 'calc(100% - 3rem)',
-        maxWidth: '680px',
+        right: '1.5rem',
+        width: 'min(360px, calc(100% - 3rem))',
         zIndex: 100,
         background: 'var(--color-nav-bg)',
         border: '1px solid var(--color-card-border)',
@@ -19,13 +18,12 @@ export default function CookieConsent({ onAccept, onDecline }) {
         boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
         padding: '1.25rem 1.5rem',
         display: 'flex',
-        alignItems: 'center',
-        gap: '1.5rem',
-        flexWrap: 'wrap',
+        flexDirection: 'column',
+        gap: '1rem',
       }}
     >
       {/* Icon + text */}
-      <div style={{ flex: 1, minWidth: '200px', display: 'flex', gap: '0.875rem', alignItems: 'flex-start' }}>
+      <div style={{ display: 'flex', gap: '0.875rem', alignItems: 'flex-start' }}>
         <div
           style={{
             flexShrink: 0,
@@ -58,7 +56,7 @@ export default function CookieConsent({ onAccept, onDecline }) {
       </div>
 
       {/* Actions */}
-      <div style={{ display: 'flex', gap: '0.625rem', flexShrink: 0 }}>
+      <div style={{ display: 'flex', gap: '0.625rem' }}>
         <button
           onClick={onDecline}
           style={{
