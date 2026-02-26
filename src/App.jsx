@@ -1,3 +1,4 @@
+import { useTheme } from './hooks/useTheme.js'
 import Navbar from './components/Navbar.jsx'
 import Hero from './components/Hero.jsx'
 import Features from './components/Features.jsx'
@@ -7,9 +8,11 @@ import DownloadCTA from './components/DownloadCTA.jsx'
 import Footer from './components/Footer.jsx'
 
 export default function App() {
+  const { theme, toggleTheme } = useTheme()
+
   return (
     <>
-      <Navbar />
+      <Navbar theme={theme} toggleTheme={toggleTheme} />
       <main>
         <Hero />
         <Features />
