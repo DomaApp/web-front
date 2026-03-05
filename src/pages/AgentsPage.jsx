@@ -15,6 +15,25 @@ const inputStyle = {
   boxSizing: 'border-box',
 }
 
+const countries = [
+  { code: '+33', flag: '🇫🇷', label: 'FR' },
+  { code: '+32', flag: '🇧🇪', label: 'BE' },
+  { code: '+41', flag: '🇨🇭', label: 'CH' },
+  { code: '+352', flag: '🇱🇺', label: 'LU' },
+  { code: '+44', flag: '🇬🇧', label: 'UK' },
+  { code: '+1', flag: '🇺🇸', label: 'US' },
+]
+
+const formatPhone = (value) => {
+  const digits = value.replace(/\D/g, '')
+  let formatted = ''
+  for (let i = 0; i < digits.length; i++) {
+    if (i > 0 && i % 2 === 0) formatted += ' '
+    formatted += digits[i]
+  }
+  return formatted.substring(0, 14) // Max 10 digits + spaces
+}
+
 function Field({ label, id, children }) {
   return (
     <div style={{ marginBottom: '1rem' }}>
@@ -31,7 +50,7 @@ export default function AgentsPage() {
   const [showForm, setShowForm] = useState(false)
   const [editingAgent, setEditingAgent] = useState(null)
   const [agents, setAgents] = useState([])
-  const [form, setForm] = useState({ firstName: '', lastName: '', email: '', phone: '' })
+  const [form, setForm] = useState({ firstName: '', lastName: '', email: '', phone: '', countryCode: '+33' })
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -45,14 +64,24 @@ export default function AgentsPage() {
 
   const openEdit = (agent) => {
     setEditingAgent(agent)
-    setForm({ firstName: agent.firstName, lastName: agent.lastName, email: agent.email, phone: agent.phone })
+    setForm({ 
+      firstName: agent.firstName, 
+      lastName: agent.lastName, 
+      email: agent.email, 
+      phone: agent.phone,
+      countryCode: agent.countryCode || '+33'
+    })
     setShowForm(true)
   }
 
   const closeForm = () => {
     setEditingAgent(null)
-    setForm({ firstName: '', lastName: '', email: '', phone: '' })
+    setForm({ firstName: '', lastName: '', email: '', phone: '', countryCode: '+33' })
     setShowForm(false)
+  }
+
+  const handlePhoneChange = (e) => {
+    setForm({ ...form, phone: formatPhone(e.target.value) })
   }
 
   return (
@@ -131,7 +160,7 @@ export default function AgentsPage() {
                     {agent.email}
                   </td>
                   <td style={{ padding: '1rem', color: 'var(--color-text-secondary)', fontSize: '0.875rem' }}>
-                    {agent.phone}
+                    {agent.countryCode} {agent.phone}
                   </td>
                   <td style={{ padding: '1rem', textAlign: 'right' }}>
                     <button
@@ -195,11 +224,30 @@ export default function AgentsPage() {
                 />
               </Field>
               <Field label={t('portal.agents.form.phone')} id="agent-phone">
-                <input 
-                  id="agent-phone"
-                  type="tel" required style={inputStyle} value={form.phone} 
-                  onChange={e => setForm({...form, phone: e.target.value})}
-                />
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <select
+                    value={form.countryCode}
+                    onChange={e => setForm({ ...form, countryCode: e.target.value })}
+                    style={{
+                      ...inputStyle,
+                      width: 'auto',
+                      paddingRight: '0.5rem',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    {countries.map(c => (
+                      <option key={c.code} value={c.code}>
+                        {c.flag} {c.code}
+                      </option>
+                    ))}
+                  </select>
+                  <input 
+                    id="agent-phone"
+                    type="tel" required style={inputStyle} value={form.phone} 
+                    onChange={handlePhoneChange}
+                    placeholder="06 12 34 56 78"
+                  />
+                </div>
               </Field>
               <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
                 <button 
