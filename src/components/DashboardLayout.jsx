@@ -92,7 +92,9 @@ export default function DashboardLayout() {
         <div style={{ width: 240, height: '100%', display: 'flex', flexDirection: 'column' }}>
           {/* Logo + close button */}
           <div style={{
-            padding: '1.5rem 1.25rem',
+            padding: '0 1.25rem',
+            height: 64,
+            flexShrink: 0,
             borderBottom: '1px solid var(--color-card-border)',
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           }}>
@@ -172,8 +174,9 @@ export default function DashboardLayout() {
         {/* Header */}
         <header style={{
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '1rem 1.5rem', borderBottom: '1px solid var(--color-card-border)',
-          background: 'var(--color-nav-bg)', flexShrink: 0,
+          padding: '0 1.5rem', height: 64, flexShrink: 0,
+          borderBottom: '1px solid var(--color-card-border)',
+          background: 'var(--color-nav-bg)',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             {!sidebarOpen && (
