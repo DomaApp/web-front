@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { ChevronLeft } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth.js'
+import API_URL, { DEV_BYPASS } from '../config/api.js'
 
 const inputStyle = {
   width: '100%',
@@ -64,7 +65,12 @@ export default function RegisterPage() {
 
     setLoading(true)
     try {
-      const res = await fetch('PLACEHOLDER_API_URL/auth/register', {
+      if (DEV_BYPASS) {
+        login('dev-token', form.agencyName, form.managerName)
+        navigate('/dashboard')
+        return
+      }
+      const res = await fetch(`${API_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

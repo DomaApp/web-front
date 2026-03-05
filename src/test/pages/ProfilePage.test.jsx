@@ -171,7 +171,7 @@ describe('ProfilePage', () => {
     expect(mockNavigate).toHaveBeenCalledWith('/login')
   })
 
-  it.skip('shows error on delete failure without closing modal — re-enable when real API is connected', async () => {
+  it('shows error on delete failure without closing modal', async () => {
     globalThis.fetch = vi.fn().mockResolvedValueOnce({
       ok: false,
       json: async () => ({ message: 'Delete failed' }),

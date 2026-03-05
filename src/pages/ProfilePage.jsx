@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../hooks/useAuth.js'
+import API_URL, { DEV_BYPASS } from '../config/api.js'
 
 const inputStyle = {
   width: '100%',
@@ -94,13 +95,12 @@ export default function ProfilePage() {
     setDeleteError('')
     setDeleteLoading(true)
     try {
-      // TODO: replace PLACEHOLDER_API_URL with the real API base URL
-      if ('PLACEHOLDER_API_URL' === 'PLACEHOLDER_API_URL') {
+      if (DEV_BYPASS) {
         logout()
         navigate('/login')
         return
       }
-      const res = await fetch('PLACEHOLDER_API_URL/agency/account', {
+      const res = await fetch(`${API_URL}/agency/account`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       })
@@ -135,7 +135,12 @@ export default function ProfilePage() {
     setInfoSuccess('')
     setInfoLoading(true)
     try {
-      const res = await fetch('PLACEHOLDER_API_URL/agency/profile', {
+      if (DEV_BYPASS) {
+        updateProfile(infoForm.agencyName, infoForm.managerName)
+        setInfoSuccess(t('portal.profile.successInfo'))
+        return
+      }
+      const res = await fetch(`${API_URL}/agency/profile`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify(infoForm),
@@ -164,7 +169,12 @@ export default function ProfilePage() {
     }
     setPwLoading(true)
     try {
-      const res = await fetch('PLACEHOLDER_API_URL/auth/change-password', {
+      if (DEV_BYPASS) {
+        setPwSuccess(t('portal.profile.successPassword'))
+        setPwForm({ currentPassword: '', newPassword: '', confirmNewPassword: '' })
+        return
+      }
+      const res = await fetch(`${API_URL}/auth/change-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ currentPassword: pwForm.currentPassword, newPassword: pwForm.newPassword }),
