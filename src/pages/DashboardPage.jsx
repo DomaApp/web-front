@@ -27,7 +27,7 @@ export default function DashboardPage() {
   const { t } = useTranslation()
 
   return (
-    <div style={{ padding: '2rem 1.5rem' }}>
+    <div className="dash-page-content">
       {/* Stats grid */}
       <div style={{
         display: 'grid',

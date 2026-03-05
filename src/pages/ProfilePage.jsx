@@ -194,7 +194,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div style={{ padding: '2rem 1.5rem' }}>
+    <div className="dash-page-content">
       <div style={{ maxWidth: 680, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
 
         {/* Page header */}
@@ -207,7 +207,7 @@ export default function ProfilePage() {
         {/* Agency information */}
         <SectionCard title={t('portal.profile.agencyInfoSection')}>
           <form onSubmit={handleInfoSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+            <div className="dash-grid-2">
               <Field label={t('portal.profile.managerNameLabel')} htmlFor="prof-managerName">
                 <input id="prof-managerName" type="text" required value={infoForm.managerName} onChange={setInfo('managerName')}
                   style={inputStyle} onFocus={focusStyle} onBlur={blurStyle} />
@@ -217,7 +217,7 @@ export default function ProfilePage() {
                   style={inputStyle} onFocus={focusStyle} onBlur={blurStyle} />
               </Field>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+            <div className="dash-grid-2">
               <Field label={t('portal.profile.emailLabel')} htmlFor="prof-email">
                 <input id="prof-email" type="email" required value={infoForm.email} onChange={setInfo('email')}
                   style={inputStyle} onFocus={focusStyle} onBlur={blurStyle} />
@@ -227,7 +227,7 @@ export default function ProfilePage() {
                   style={inputStyle} onFocus={focusStyle} onBlur={blurStyle} />
               </Field>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: '0.75rem' }}>
+            <div className="dash-grid-fixed">
               <Field label={t('portal.profile.streetNumberLabel')} htmlFor="prof-streetNumber">
                 <input id="prof-streetNumber" type="text" required value={infoForm.streetNumber} onChange={setInfo('streetNumber')}
                   style={inputStyle} onFocus={focusStyle} onBlur={blurStyle} />
@@ -237,7 +237,7 @@ export default function ProfilePage() {
                   style={inputStyle} onFocus={focusStyle} onBlur={blurStyle} />
               </Field>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: '0.75rem' }}>
+            <div className="dash-grid-fixed">
               <Field label={t('portal.profile.postalCodeLabel')} htmlFor="prof-postalCode">
                 <input id="prof-postalCode" type="text" required value={infoForm.postalCode} onChange={setInfo('postalCode')}
                   style={inputStyle} onFocus={focusStyle} onBlur={blurStyle} />
@@ -267,7 +267,7 @@ export default function ProfilePage() {
               <input id="prof-currentPassword" type="password" required value={pwForm.currentPassword} onChange={setPw('currentPassword')}
                 placeholder="••••••••" style={inputStyle} onFocus={focusStyle} onBlur={blurStyle} />
             </Field>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+            <div className="dash-grid-2">
               <Field label={t('portal.profile.newPasswordLabel')} htmlFor="prof-newPassword">
                 <input id="prof-newPassword" type="password" required value={pwForm.newPassword} onChange={setPw('newPassword')}
                   placeholder="••••••••" style={inputStyle} onFocus={focusStyle} onBlur={blurStyle} />
@@ -297,7 +297,7 @@ export default function ProfilePage() {
               {t('portal.profile.deleteSection')}
             </p>
           </div>
-          <div style={{ padding: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
+          <div className="dash-row-spread" style={{ padding: '1.5rem' }}>
             <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--color-text-secondary)', maxWidth: 420 }}>
               {t('portal.profile.deleteDescription')}
             </p>

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { LayoutDashboard, Building2, LogOut, ChevronLeft, Menu, Users, MapPin } from 'lucide-react'
@@ -14,11 +14,30 @@ export default function DashboardLayout() {
   const { managerName, logout } = useAuth()
   const { consented } = useCookieConsent()
   const { theme, toggleTheme } = useTheme(consented)
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768)
+  const [sidebarOpen, setSidebarOpen] = useState(() => window.innerWidth >= 768)
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768
+      setIsMobile(mobile)
+      if (!mobile) {
+        setSidebarOpen(true)
+      } else {
+        setSidebarOpen(false)
+      }
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   const handleLogout = () => {
     logout()
     navigate('/')
+  }
+
+  const handleNavClick = () => {
+    if (isMobile) setSidebarOpen(false)
   }
 
   const navItems = [
@@ -28,17 +47,47 @@ export default function DashboardLayout() {
     { to: '/dashboard/profile', icon: Building2, label: t('portal.dashboard.nav.profile') },
   ]
 
-  return (
-    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: 'var(--color-bg)' }}>
-      {/* Sidebar */}
-      <aside style={{
+  const sidebarStyle = isMobile
+    ? {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        height: '100vh',
+        zIndex: 300,
         width: sidebarOpen ? 240 : 0,
         flexShrink: 0,
         overflow: 'hidden',
         transition: 'width 0.25s ease',
         borderRight: sidebarOpen ? '1px solid var(--color-card-border)' : 'none',
         background: 'var(--color-nav-bg)',
-      }}>
+      }
+    : {
+        width: sidebarOpen ? 240 : 0,
+        flexShrink: 0,
+        overflow: 'hidden',
+        transition: 'width 0.25s ease',
+        borderRight: sidebarOpen ? '1px solid var(--color-card-border)' : 'none',
+        background: 'var(--color-nav-bg)',
+      }
+
+  return (
+    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: 'var(--color-bg)' }}>
+      {/* Mobile backdrop */}
+      {isMobile && sidebarOpen && (
+        <div
+          aria-label="Close sidebar backdrop"
+          onClick={() => setSidebarOpen(false)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 299,
+            background: 'rgba(0,0,0,0.4)',
+          }}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside style={sidebarStyle}>
         {/* Inner wrapper — fixed width so content doesn't reflow during animation */}
         <div style={{ width: 240, height: '100%', display: 'flex', flexDirection: 'column' }}>
           {/* Logo + close button */}
@@ -83,6 +132,7 @@ export default function DashboardLayout() {
                 key={to}
                 to={to}
                 end={end}
+                onClick={handleNavClick}
                 style={({ isActive }) => ({
                   display: 'flex', alignItems: 'center', gap: '0.75rem',
                   padding: '0.625rem 0.875rem', borderRadius: '0.5rem',
