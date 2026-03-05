@@ -150,7 +150,9 @@
         "profile": "Agency profile"
       },
       "chart": {
-        "title": "Sales — Last 30 days"
+        "title": "Sales — Last 30 days",
+        "sales_one": "Sale",
+        "sales_other": "Sales"
       },
       "stats": {
         "messages":       { "label": "Messages",        "value": "0" },

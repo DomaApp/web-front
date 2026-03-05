@@ -83,6 +83,7 @@ export default function DashboardPage() {
               axisLine={false}
             />
             <Tooltip
+              formatter={(value) => [value, t('portal.dashboard.chart.sales', { count: value })]}
               contentStyle={{
                 background: 'var(--color-card-bg)',
                 border: '1px solid var(--color-card-border)',

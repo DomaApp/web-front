@@ -108,6 +108,8 @@ const { mockChangeLanguage, mockT } = vi.hoisted(() => ({
       'portal.dashboard.nav.dashboard': 'Dashboard',
       'portal.dashboard.nav.profile': 'Agency profile',
       'portal.dashboard.chart.title': 'Sales — Last 30 days',
+      'portal.dashboard.chart.sales_one': 'Sale',
+      'portal.dashboard.chart.sales_other': 'Sales',
       'portal.dashboard.stats.messages.label': 'Messages',
       'portal.dashboard.stats.messages.value': '0',
       'portal.dashboard.stats.activeListings.label': 'Active listings',
@@ -119,6 +121,9 @@ const { mockChangeLanguage, mockT } = vi.hoisted(() => ({
     }
     if (key === 'portal.dashboard.greeting') {
       return `Hello, ${options?.agency ?? ''}`
+    }
+    if (key === 'portal.dashboard.chart.sales') {
+      return options?.count === 1 ? 'Sale' : 'Sales'
     }
     return translations[key] || key
   }
