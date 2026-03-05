@@ -1,7 +1,7 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { Plus, Megaphone, X, Pencil, Trash2, BarChart2, Camera, Eye, MessageCircle, Heart, Calendar } from 'lucide-react'
+import { Plus, Home, X, Pencil, Trash2, BarChart2, Camera, Eye, MessageCircle, Heart, Calendar, ChevronDown } from 'lucide-react'
 
 const inputStyle = {
   width: '100%',
@@ -17,6 +17,78 @@ const inputStyle = {
 }
 
 const STATS_FIXED = { views: 847, contacts: 32, favorites: 56, daysOnline: 14 }
+
+const formatPriceDisplay = (raw) => {
+  if (!raw) return ''
+  const num = parseInt(raw, 10)
+  return isNaN(num) ? '' : num.toLocaleString('fr-FR')
+}
+const parsePriceInput = (display) => display.replace(/\D/g, '')
+
+function CustomSelect({ id, value, onChange, options }) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef(null)
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
+
+  const selected = options.find(o => o.value === value)
+
+  return (
+    <div ref={ref} style={{ position: 'relative' }}>
+      <button
+        type="button"
+        id={id}
+        onClick={() => setOpen(p => !p)}
+        style={{
+          ...inputStyle,
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          cursor: 'pointer', textAlign: 'left',
+        }}
+      >
+        <span>{selected?.label}</span>
+        <ChevronDown
+          size={14}
+          style={{
+            color: 'var(--color-text-secondary)', flexShrink: 0,
+            transition: 'transform 0.15s', transform: open ? 'rotate(180deg)' : 'none',
+          }}
+        />
+      </button>
+      {open && (
+        <div style={{
+          position: 'absolute', top: 'calc(100% + 4px)', left: 0, right: 0, zIndex: 200,
+          background: 'var(--color-nav-bg)', border: '1px solid var(--color-card-border)',
+          borderRadius: '0.625rem', backdropFilter: 'blur(12px)', overflow: 'hidden',
+          boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+        }}>
+          {options.map(opt => (
+            <div
+              key={opt.value}
+              onClick={() => { onChange(opt.value); setOpen(false) }}
+              style={{
+                padding: '0.625rem 0.875rem', cursor: 'pointer', fontSize: '0.9rem',
+                color: opt.value === value ? 'var(--color-blue-primary)' : 'var(--color-text-primary)',
+                background: opt.value === value ? 'rgba(43, 127, 255, 0.08)' : 'transparent',
+                fontWeight: opt.value === value ? 600 : 400,
+                transition: 'background 0.1s',
+              }}
+              onMouseEnter={e => { if (opt.value !== value) e.currentTarget.style.background = 'rgba(43,127,255,0.05)' }}
+              onMouseLeave={e => { if (opt.value !== value) e.currentTarget.style.background = 'transparent' }}
+            >
+              {opt.label}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
 
 function Field({ label, id, children }) {
   return (
@@ -164,7 +236,7 @@ export default function AnnouncesPage() {
             background: 'var(--color-nav-bg)', color: 'var(--color-text-secondary)',
             display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem',
           }}>
-            <Megaphone size={24} />
+            <Home size={24} />
           </div>
           <p style={{ color: 'var(--color-text-secondary)', margin: 0 }}>{t('portal.announces.list.empty')}</p>
         </div>
@@ -211,7 +283,7 @@ export default function AnnouncesPage() {
                       {announce.photo ? (
                         <img src={announce.photo} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       ) : (
-                        <Megaphone size={18} color="var(--color-text-secondary)" />
+                        <Home size={18} color="var(--color-text-secondary)" />
                       )}
                     </div>
                   </td>
@@ -316,7 +388,7 @@ export default function AnnouncesPage() {
                     {form.photo ? (
                       <img src={form.photo} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     ) : (
-                      <Megaphone size={28} color="var(--color-text-secondary)" />
+                      <Home size={28} color="var(--color-text-secondary)" />
                     )}
                   </div>
                   <div style={{
@@ -342,37 +414,38 @@ export default function AnnouncesPage() {
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                 <Field label={t('portal.announces.form.type')} id="ann-type">
-                  <select
+                  <CustomSelect
                     id="ann-type"
-                    required style={{ ...inputStyle, cursor: 'pointer' }}
                     value={form.type}
-                    onChange={e => setForm(prev => ({ ...prev, type: e.target.value }))}
-                  >
-                    <option value="vente">{t('portal.announces.form.typeSale')}</option>
-                    <option value="location">{t('portal.announces.form.typeRent')}</option>
-                  </select>
+                    onChange={val => setForm(prev => ({ ...prev, type: val }))}
+                    options={[
+                      { value: 'vente', label: t('portal.announces.form.typeSale') },
+                      { value: 'location', label: t('portal.announces.form.typeRent') },
+                    ]}
+                  />
                 </Field>
 
                 <Field label={t('portal.announces.form.status')} id="ann-status">
-                  <select
+                  <CustomSelect
                     id="ann-status"
-                    style={{ ...inputStyle, cursor: 'pointer' }}
                     value={form.status}
-                    onChange={e => setForm(prev => ({ ...prev, status: e.target.value }))}
-                  >
-                    <option value="active">{t('portal.announces.form.statusActive')}</option>
-                    <option value="draft">{t('portal.announces.form.statusDraft')}</option>
-                    <option value="archived">{t('portal.announces.form.statusArchived')}</option>
-                  </select>
+                    onChange={val => setForm(prev => ({ ...prev, status: val }))}
+                    options={[
+                      { value: 'active', label: t('portal.announces.form.statusActive') },
+                      { value: 'draft', label: t('portal.announces.form.statusDraft') },
+                      { value: 'archived', label: t('portal.announces.form.statusArchived') },
+                    ]}
+                  />
                 </Field>
               </div>
 
               <Field label={t('portal.announces.form.price')} id="ann-price">
                 <input
                   id="ann-price"
-                  type="number" required min="0" style={inputStyle} value={form.price}
-                  onChange={e => setForm(prev => ({ ...prev, price: e.target.value }))}
-                  placeholder="350000"
+                  type="text" required inputMode="numeric" style={inputStyle}
+                  value={formatPriceDisplay(form.price)}
+                  onChange={e => setForm(prev => ({ ...prev, price: parsePriceInput(e.target.value) }))}
+                  placeholder="350 000"
                 />
               </Field>
 
