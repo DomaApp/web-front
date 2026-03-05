@@ -73,7 +73,7 @@ describe('RegisterPage', () => {
   })
 
   it('shows generic error on API failure', async () => {
-    global.fetch = vi.fn().mockResolvedValueOnce({
+    globalThis.fetch = vi.fn().mockResolvedValueOnce({
       ok: false,
       json: async () => ({ message: 'Email already in use' }),
     })
@@ -84,7 +84,7 @@ describe('RegisterPage', () => {
   })
 
   it('navigates to dashboard on successful registration', async () => {
-    global.fetch = vi.fn().mockResolvedValueOnce({
+    globalThis.fetch = vi.fn().mockResolvedValueOnce({
       ok: true,
       json: async () => ({ token: 'reg-token', agencyName: 'Test Agency' }),
     })
