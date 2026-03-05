@@ -173,7 +173,7 @@ export default function AgentsPage() {
                     <div style={{
                       width: 40, height: 40, borderRadius: '50%', overflow: 'hidden',
                       background: 'var(--color-nav-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      border: '1px solid var(--color-card-border)'
+                      border: '1.5px solid var(--color-blue-primary)'
                     }}>
                       {agent.photo ? (
                         <img src={agent.photo} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
