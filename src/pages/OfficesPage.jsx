@@ -99,7 +99,7 @@ export default function OfficesPage() {
   }
 
   return (
-    <div style={{ padding: '2rem 1.5rem' }}>
+    <div className="dash-page-content">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem' }}>
         <div>
           <h1 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--color-text-primary)', margin: '0 0 0.25rem' }}>

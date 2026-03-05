@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import { MemoryRouter, Routes, Route } from 'react-router-dom'
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import DashboardLayout from '../../components/DashboardLayout'
 
 vi.mock('react-i18next', () => ({
@@ -40,6 +40,26 @@ vi.mock('../../components/LanguageToggle.jsx', () => ({
   default: () => <button aria-label="Select language">EN</button>,
 }))
 
+function mockDesktop() {
+  Object.defineProperty(window, 'innerWidth', { value: 1024, configurable: true, writable: true })
+  window.matchMedia = vi.fn().mockImplementation(query => ({
+    matches: false,
+    media: query,
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+  }))
+}
+
+function mockMobile() {
+  Object.defineProperty(window, 'innerWidth', { value: 375, configurable: true, writable: true })
+  window.matchMedia = vi.fn().mockImplementation(query => ({
+    matches: true,
+    media: query,
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+  }))
+}
+
 function renderLayout({ initialEntry = '/dashboard' } = {}) {
   return render(
     <MemoryRouter initialEntries={[initialEntry]}>
@@ -55,6 +75,14 @@ function renderLayout({ initialEntry = '/dashboard' } = {}) {
 }
 
 describe('DashboardLayout', () => {
+  beforeEach(() => {
+    mockDesktop()
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
   it('renders sidebar navigation links', () => {
     renderLayout()
     expect(screen.getByRole('link', { name: /^dashboard$/i })).toBeInTheDocument()
@@ -100,7 +128,7 @@ describe('DashboardLayout', () => {
     expect(screen.getByRole('button', { name: /select language/i })).toBeInTheDocument()
   })
 
-  it('sidebar is open by default — no burger button visible', () => {
+  it('sidebar is open by default on desktop — no burger button visible', () => {
     renderLayout()
     expect(screen.queryByRole('button', { name: /open sidebar/i })).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: /close sidebar/i })).toBeInTheDocument()
@@ -119,5 +147,41 @@ describe('DashboardLayout', () => {
     fireEvent.click(screen.getByRole('button', { name: /open sidebar/i }))
     expect(screen.getByRole('button', { name: /close sidebar/i })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /open sidebar/i })).not.toBeInTheDocument()
+  })
+
+  describe('mobile behavior', () => {
+    beforeEach(() => {
+      mockMobile()
+    })
+
+    it('on mobile, sidebar starts closed and hamburger is visible', () => {
+      renderLayout()
+      expect(screen.getByRole('button', { name: /open sidebar/i })).toBeInTheDocument()
+      expect(screen.queryByRole('button', { name: /close sidebar/i })).not.toBeInTheDocument()
+    })
+
+    it('on mobile, clicking hamburger opens sidebar with backdrop', () => {
+      renderLayout()
+      fireEvent.click(screen.getByRole('button', { name: /open sidebar/i }))
+      expect(screen.getByRole('button', { name: /close sidebar/i })).toBeInTheDocument()
+      expect(screen.getByLabelText('Close sidebar backdrop')).toBeInTheDocument()
+    })
+
+    it('on mobile, clicking backdrop closes sidebar', () => {
+      renderLayout()
+      fireEvent.click(screen.getByRole('button', { name: /open sidebar/i }))
+      fireEvent.click(screen.getByLabelText('Close sidebar backdrop'))
+      expect(screen.getByRole('button', { name: /open sidebar/i })).toBeInTheDocument()
+      expect(screen.queryByLabelText('Close sidebar backdrop')).not.toBeInTheDocument()
+    })
+
+    it('on mobile, clicking a nav link closes sidebar', () => {
+      renderLayout()
+      fireEvent.click(screen.getByRole('button', { name: /open sidebar/i }))
+      expect(screen.getByRole('button', { name: /close sidebar/i })).toBeInTheDocument()
+      fireEvent.click(screen.getByRole('link', { name: /^dashboard$/i }))
+      expect(screen.getByRole('button', { name: /open sidebar/i })).toBeInTheDocument()
+      expect(screen.queryByRole('button', { name: /close sidebar/i })).not.toBeInTheDocument()
+    })
   })
 })
