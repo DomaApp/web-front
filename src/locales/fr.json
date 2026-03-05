@@ -148,6 +148,7 @@
       "logout": "Se déconnecter",
       "nav": {
         "dashboard": "Tableau de bord",
+        "agents": "Agents",
         "profile": "Profil de l'agence"
       },
       "chart": {
@@ -164,6 +165,23 @@
     "profile": {
       "title": "Profil de l'agence",
       "comingSoon": "Cette section est en cours de développement."
+    },
+    "agents": {
+      "title": "Agents de l'agence",
+      "subtitle": "Gérez vos agents immobiliers",
+      "addAgent": "Ajouter un agent",
+      "form": {
+        "firstName": "Prénom",
+        "lastName": "Nom",
+        "email": "Adresse mail",
+        "phone": "Numéro de téléphone",
+        "cancel": "Annuler",
+        "submit": "Ajouter l'agent",
+        "success": "Agent ajouté avec succès !"
+      },
+      "list": {
+        "empty": "Aucun agent pour le moment."
+      }
     }
   }
 }

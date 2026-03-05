@@ -148,6 +148,7 @@
       "logout": "Sign out",
       "nav": {
         "dashboard": "Dashboard",
+        "agents": "Agents",
         "profile": "Agency profile"
       },
       "chart": {
@@ -164,6 +165,23 @@
     "profile": {
       "title": "Agency profile",
       "comingSoon": "This section is under development."
+    },
+    "agents": {
+      "title": "Agency agents",
+      "subtitle": "Manage your real estate agents",
+      "addAgent": "Add an agent",
+      "form": {
+        "firstName": "First name",
+        "lastName": "Last name",
+        "email": "Email address",
+        "phone": "Phone number",
+        "cancel": "Cancel",
+        "submit": "Add agent",
+        "success": "Agent added successfully!"
+      },
+      "list": {
+        "empty": "No agents yet."
+      }
     }
   }
 }
