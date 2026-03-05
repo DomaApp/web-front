@@ -59,7 +59,7 @@ export default function DashboardLayout() {
         overflow: 'hidden',
         transition: 'width 0.25s ease',
         borderRight: sidebarOpen ? '1px solid var(--color-card-border)' : 'none',
-        background: 'var(--color-nav-bg)',
+        background: 'var(--color-bg)',
       }
     : {
         width: sidebarOpen ? 240 : 0,
