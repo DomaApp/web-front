@@ -143,7 +143,6 @@ describe('ProfilePage', () => {
     renderProfilePage()
     fireEvent.click(screen.getByRole('button', { name: /delete account/i }))
     fireEvent.change(document.getElementById('delete-confirm-input'), { target: { value: 'Wrong Name' } })
-    const confirmBtn = screen.getAllByRole('button', { name: /delete account/i }).find(b => b.disabled !== undefined && b.closest('[role="dialog"]'))
     expect(document.getElementById('delete-confirm-input').value).toBe('Wrong Name')
     const dialogButtons = screen.getByRole('dialog').querySelectorAll('button')
     const confirmButton = Array.from(dialogButtons).find(b => b.textContent === 'Delete account')
