@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Plus, Users, X, Pencil } from 'lucide-react'
+import { Plus, Users, X, Pencil, Camera } from 'lucide-react'
 
 const inputStyle = {
   width: '100%',
@@ -51,7 +51,7 @@ export default function AgentsPage() {
   const [showForm, setShowForm] = useState(false)
   const [editingAgent, setEditingAgent] = useState(null)
   const [agents, setAgents] = useState([])
-  const [form, setForm] = useState({ firstName: '', lastName: '', email: '', phone: '', countryCode: '+33' })
+  const [form, setForm] = useState({ firstName: '', lastName: '', email: '', phone: '', countryCode: '+33', photo: null })
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -70,19 +70,31 @@ export default function AgentsPage() {
       lastName: agent.lastName, 
       email: agent.email, 
       phone: agent.phone,
-      countryCode: agent.countryCode || '+33'
+      countryCode: agent.countryCode || '+33',
+      photo: agent.photo || null
     })
     setShowForm(true)
   }
 
   const closeForm = () => {
     setEditingAgent(null)
-    setForm({ firstName: '', lastName: '', email: '', phone: '', countryCode: '+33' })
+    setForm({ firstName: '', lastName: '', email: '', phone: '', countryCode: '+33', photo: null })
     setShowForm(false)
   }
 
   const handlePhoneChange = (e) => {
     setForm({ ...form, phone: formatPhone(e.target.value) })
+  }
+
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setForm({ ...form, photo: reader.result })
+      }
+      reader.readAsDataURL(file)
+    }
   }
 
   return (
@@ -137,6 +149,9 @@ export default function AgentsPage() {
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid var(--color-card-border)' }}>
+                <th style={{ padding: '1rem', color: 'var(--color-text-secondary)', fontWeight: 600, fontSize: '0.8rem', width: '48px' }}>
+                  {t('portal.agents.form.photo')}
+                </th>
                 <th style={{ padding: '1rem', color: 'var(--color-text-secondary)', fontWeight: 600, fontSize: '0.8rem' }}>
                   {t('portal.agents.form.firstName')} / {t('portal.agents.form.lastName')}
                 </th>
@@ -154,6 +169,19 @@ export default function AgentsPage() {
             <tbody>
               {agents.map(agent => (
                 <tr key={agent.id} style={{ borderBottom: '1px solid var(--color-card-border)' }}>
+                  <td style={{ padding: '0.75rem 1rem' }}>
+                    <div style={{
+                      width: 40, height: 40, borderRadius: '50%', overflow: 'hidden',
+                      background: 'var(--color-nav-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      border: '1px solid var(--color-card-border)'
+                    }}>
+                      {agent.photo ? (
+                        <img src={agent.photo} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      ) : (
+                        <Users size={20} color="var(--color-text-secondary)" />
+                      )}
+                    </div>
+                  </td>
                   <td style={{ padding: '1rem', color: 'var(--color-text-primary)', fontWeight: 500, fontSize: '0.9rem' }}>
                     {agent.firstName} {agent.lastName}
                   </td>
@@ -201,6 +229,32 @@ export default function AgentsPage() {
               {editingAgent ? t('portal.agents.editAgent') : t('portal.agents.addAgent')}
             </h2>
             <form onSubmit={handleSubmit}>
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' }}>
+                <div style={{ position: 'relative' }}>
+                  <div style={{
+                    width: 80, height: 80, borderRadius: '50%', overflow: 'hidden',
+                    background: 'var(--color-nav-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    border: '2px solid var(--color-blue-primary)'
+                  }}>
+                    {form.photo ? (
+                      <img src={form.photo} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    ) : (
+                      <Users size={32} color="var(--color-text-secondary)" />
+                    )}
+                  </div>
+                  <label style={{
+                    position: 'absolute', bottom: 0, right: 0, 
+                    width: 28, height: 28, borderRadius: '50%', 
+                    background: 'var(--color-blue-primary)', color: '#fff',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    cursor: 'pointer', border: '2px solid var(--color-bg)'
+                  }}>
+                    <Camera size={14} />
+                    <input type="file" accept="image/*" onChange={handlePhotoChange} style={{ display: 'none' }} />
+                  </label>
+                </div>
+              </div>
+
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                 <Field label={t('portal.agents.form.firstName')} id="agent-firstName">
                   <input 

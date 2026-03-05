@@ -172,6 +172,9 @@
       "addAgent": "Add an agent",
       "editAgent": "Edit agent",
       "form": {
+        "photo": "Photo",
+        "photoUpload": "Upload photo",
+        "photoChange": "Change",
         "firstName": "First name",
         "lastName": "Last name",
         "email": "Email address",

@@ -172,6 +172,9 @@
       "addAgent": "Ajouter un agent",
       "editAgent": "Modifier l'agent",
       "form": {
+        "photo": "Photo",
+        "photoUpload": "Télécharger une photo",
+        "photoChange": "Modifier",
         "firstName": "Prénom",
         "lastName": "Nom",
         "email": "Adresse mail",
