@@ -170,6 +170,7 @@
       "title": "Agency agents",
       "subtitle": "Manage your real estate agents",
       "addAgent": "Add an agent",
+      "editAgent": "Edit agent",
       "form": {
         "firstName": "First name",
         "lastName": "Last name",
@@ -177,10 +178,14 @@
         "phone": "Phone number",
         "cancel": "Cancel",
         "submit": "Add agent",
-        "success": "Agent added successfully!"
+        "submitEdit": "Save changes",
+        "success": "Agent added successfully!",
+        "successEdit": "Agent updated successfully!"
       },
       "list": {
-        "empty": "No agents yet."
+        "empty": "No agents yet.",
+        "actions": "Actions",
+        "edit": "Edit"
       }
     }
   }

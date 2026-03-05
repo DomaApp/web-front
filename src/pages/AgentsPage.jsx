@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Plus, Users, X } from 'lucide-react'
+import { Plus, Users, X, Pencil } from 'lucide-react'
 
 const inputStyle = {
   width: '100%',
@@ -29,12 +29,28 @@ function Field({ label, id, children }) {
 export default function AgentsPage() {
   const { t } = useTranslation()
   const [showForm, setShowForm] = useState(false)
+  const [editingAgent, setEditingAgent] = useState(null)
   const [agents, setAgents] = useState([])
   const [form, setForm] = useState({ firstName: '', lastName: '', email: '', phone: '' })
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    setAgents([...agents, { ...form, id: Date.now() }])
+    if (editingAgent) {
+      setAgents(agents.map(a => a.id === editingAgent.id ? { ...form, id: a.id } : a))
+    } else {
+      setAgents([...agents, { ...form, id: Date.now() }])
+    }
+    closeForm()
+  }
+
+  const openEdit = (agent) => {
+    setEditingAgent(agent)
+    setForm({ firstName: agent.firstName, lastName: agent.lastName, email: agent.email, phone: agent.phone })
+    setShowForm(true)
+  }
+
+  const closeForm = () => {
+    setEditingAgent(null)
     setForm({ firstName: '', lastName: '', email: '', phone: '' })
     setShowForm(false)
   }
@@ -87,20 +103,53 @@ export default function AgentsPage() {
           <p style={{ color: 'var(--color-text-secondary)', margin: 0 }}>{t('portal.agents.list.empty')}</p>
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1rem' }}>
-          {agents.map(agent => (
-            <div key={agent.id} className="glass-card" style={{ padding: '1.25rem' }}>
-              <h3 style={{ margin: '0 0 0.25rem', color: 'var(--color-text-primary)', fontSize: '1rem' }}>
-                {agent.firstName} {agent.lastName}
-              </h3>
-              <p style={{ margin: '0 0 0.125rem', color: 'var(--color-text-secondary)', fontSize: '0.875rem' }}>
-                {agent.email}
-              </p>
-              <p style={{ margin: 0, color: 'var(--color-text-secondary)', fontSize: '0.875rem' }}>
-                {agent.phone}
-              </p>
-            </div>
-          ))}
+        <div className="glass-card" style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--color-card-border)' }}>
+                <th style={{ padding: '1rem', color: 'var(--color-text-secondary)', fontWeight: 600, fontSize: '0.8rem' }}>
+                  {t('portal.agents.form.firstName')} / {t('portal.agents.form.lastName')}
+                </th>
+                <th style={{ padding: '1rem', color: 'var(--color-text-secondary)', fontWeight: 600, fontSize: '0.8rem' }}>
+                  {t('portal.agents.form.email')}
+                </th>
+                <th style={{ padding: '1rem', color: 'var(--color-text-secondary)', fontWeight: 600, fontSize: '0.8rem' }}>
+                  {t('portal.agents.form.phone')}
+                </th>
+                <th style={{ padding: '1rem', color: 'var(--color-text-secondary)', fontWeight: 600, fontSize: '0.8rem', textAlign: 'right' }}>
+                  {t('portal.agents.list.actions')}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {agents.map(agent => (
+                <tr key={agent.id} style={{ borderBottom: '1px solid var(--color-card-border)' }}>
+                  <td style={{ padding: '1rem', color: 'var(--color-text-primary)', fontWeight: 500, fontSize: '0.9rem' }}>
+                    {agent.firstName} {agent.lastName}
+                  </td>
+                  <td style={{ padding: '1rem', color: 'var(--color-text-secondary)', fontSize: '0.875rem' }}>
+                    {agent.email}
+                  </td>
+                  <td style={{ padding: '1rem', color: 'var(--color-text-secondary)', fontSize: '0.875rem' }}>
+                    {agent.phone}
+                  </td>
+                  <td style={{ padding: '1rem', textAlign: 'right' }}>
+                    <button
+                      onClick={() => openEdit(agent)}
+                      style={{
+                        padding: '0.4rem 0.75rem', borderRadius: '0.5rem', border: '1px solid var(--color-card-border)',
+                        background: 'transparent', color: 'var(--color-text-primary)', fontSize: '0.8rem', fontWeight: 600,
+                        cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.4rem'
+                      }}
+                    >
+                      <Pencil size={14} />
+                      {t('portal.agents.list.edit')}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
 
@@ -113,13 +162,13 @@ export default function AgentsPage() {
         }}>
           <div className="glass-card" style={{ width: '100%', maxWidth: 400, padding: '1.5rem', position: 'relative', background: 'var(--color-bg)' }}>
             <button 
-              onClick={() => setShowForm(false)}
+              onClick={closeForm}
               style={{ position: 'absolute', top: '1rem', right: '1rem', border: 'none', background: 'transparent', color: 'var(--color-text-secondary)', cursor: 'pointer' }}
             >
               <X size={20} />
             </button>
             <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-text-primary)', margin: '0 0 1.5rem' }}>
-              {t('portal.agents.addAgent')}
+              {editingAgent ? t('portal.agents.editAgent') : t('portal.agents.addAgent')}
             </h2>
             <form onSubmit={handleSubmit}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
@@ -154,7 +203,7 @@ export default function AgentsPage() {
               </Field>
               <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
                 <button 
-                  type="button" onClick={() => setShowForm(false)}
+                  type="button" onClick={closeForm}
                   style={{
                     flex: 1, padding: '0.625rem', borderRadius: '0.625rem', border: '1px solid var(--color-card-border)',
                     background: 'transparent', color: 'var(--color-text-primary)', fontWeight: 600, cursor: 'pointer'
@@ -170,7 +219,7 @@ export default function AgentsPage() {
                     color: '#fff', fontWeight: 600, cursor: 'pointer'
                   }}
                 >
-                  {t('portal.agents.form.submit')}
+                  {editingAgent ? t('portal.agents.form.submitEdit') : t('portal.agents.form.submit')}
                 </button>
               </div>
             </form>

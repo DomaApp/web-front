@@ -170,6 +170,7 @@
       "title": "Agents de l'agence",
       "subtitle": "Gérez vos agents immobiliers",
       "addAgent": "Ajouter un agent",
+      "editAgent": "Modifier l'agent",
       "form": {
         "firstName": "Prénom",
         "lastName": "Nom",
@@ -177,10 +178,14 @@
         "phone": "Numéro de téléphone",
         "cancel": "Annuler",
         "submit": "Ajouter l'agent",
-        "success": "Agent ajouté avec succès !"
+        "submitEdit": "Enregistrer les modifications",
+        "success": "Agent ajouté avec succès !",
+        "successEdit": "Agent mis à jour avec succès !"
       },
       "list": {
-        "empty": "Aucun agent pour le moment."
+        "empty": "Aucun agent pour le moment.",
+        "actions": "Actions",
+        "edit": "Modifier"
       }
     }
   }

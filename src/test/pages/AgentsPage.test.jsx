@@ -54,4 +54,30 @@ describe('AgentsPage', () => {
     expect(screen.getByText('john.doe@example.com')).toBeInTheDocument()
     expect(screen.getByText('0123456789')).toBeInTheDocument()
   })
+
+  it('edits an existing agent', () => {
+    render(<AgentsPage />)
+    
+    // Add an agent first
+    fireEvent.click(screen.getByRole('button', { name: /portal.agents.addAgent/i }))
+    fireEvent.change(screen.getByLabelText('portal.agents.form.firstName'), { target: { value: 'John' } })
+    fireEvent.change(screen.getByLabelText('portal.agents.form.lastName'), { target: { value: 'Doe' } })
+    fireEvent.change(screen.getByLabelText('portal.agents.form.email'), { target: { value: 'john@example.com' } })
+    fireEvent.change(screen.getByLabelText('portal.agents.form.phone'), { target: { value: '0123' } })
+    fireEvent.click(screen.getByRole('button', { name: /portal.agents.form.submit/i }))
+
+    // Click edit
+    fireEvent.click(screen.getByRole('button', { name: /portal.agents.list.edit/i }))
+
+    // Check if modal has edit title
+    expect(screen.getByText('portal.agents.editAgent')).toBeInTheDocument()
+
+    // Modify firstName
+    fireEvent.change(screen.getByLabelText('portal.agents.form.firstName'), { target: { value: 'Jane' } })
+    fireEvent.click(screen.getByRole('button', { name: /portal.agents.form.submitEdit/i }))
+
+    // Check if updated in list
+    expect(screen.getByText('Jane Doe')).toBeInTheDocument()
+    expect(screen.queryByText('John Doe')).not.toBeInTheDocument()
+  })
 })
