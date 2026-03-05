@@ -331,7 +331,8 @@ export default function ProfilePage() {
               {t('portal.profile.deleteModalWarning')}
             </p>
             <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-text-secondary)', marginBottom: '0.375rem' }}>
-              {t('portal.profile.deleteModalInstruction')}
+              {t('portal.profile.deleteModalInstruction')}{' '}
+              <span style={{ color: 'var(--color-text-primary)' }}>{agency}</span>
             </label>
             <input
               id="delete-confirm-input"
